@@ -8,6 +8,11 @@ import { LoadingButton } from '@mui/lab';
 // component
 import Iconify from '../../../components/Iconify';
 
+//axios
+import axios from 'axios';
+import DashboardApp from 'src/pages/DashboardApp';
+const FormData = require('form-data');
+
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
@@ -26,8 +31,26 @@ export default function LoginForm() {
       remember: true
     },
     validationSchema: LoginSchema,
-    onSubmit: () => {
-      navigate('/dashboard/app', { replace: true });
+    onSubmit: (values,{ setSubmitting }) => {
+      
+      const formData = new FormData();
+      formData.append('email',values.email);
+      formData.append('password',values.password);
+      
+      axios.post('https://api.delta-sjec.tech/api/login',formData,{
+        headers: {
+         
+          'Content-type': 'multipart/form-data'
+        }})
+      .then((response) => {
+        //console.log(response.data['token']);
+        localStorage.setItem("token", response.data['token']);
+        navigate('/dashboard/app', { replace: true });
+      }, (error) => {
+        setSubmitting(false)
+        alert("Wrong Email or Password!")
+      });
+     
     }
   });
 

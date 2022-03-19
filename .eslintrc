@@ -62,13 +62,16 @@
       }
     ],
     "prettier/prettier": [
-      2,
+      "error",
       {
-        "printWidth": 100,
+        "printWidth": 200,
         "singleQuote": true,
         "trailingComma": "none",
-        "tabWidth": 2
+        "tabWidth": 2,
+        "endOfLine": "auto"
+        
       }
     ]
+   
   }
 }
