@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 // material
 import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
@@ -9,6 +10,7 @@ import MenuPopover from '../../components/MenuPopover';
 //
 import account from '../../_mocks_/account';
 
+import axios from 'axios';
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
@@ -21,7 +23,15 @@ const MENU_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function AccountPopover() {
+AccountPopover.propTypes = {
+ 
+  userData:PropTypes.object
+};
+
+
+export default function AccountPopover({userData}) {
+  
+ 
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -32,6 +42,8 @@ export default function AccountPopover() {
     setOpen(false);
   };
 
+  
+  
   return (
     <>
       <IconButton
@@ -65,10 +77,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {account.displayName}
+            {userData.name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {userData.email}
           </Typography>
         </Box>
 
