@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // material
 import { alpha } from '@mui/material/styles';
@@ -30,7 +31,7 @@ AccountPopover.propTypes = {
 
 
 export default function AccountPopover({userData}) {
-  
+  const navigate = useNavigate();
  
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
@@ -41,10 +42,16 @@ export default function AccountPopover({userData}) {
   const handleClose = () => {
     setOpen(false);
   };
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    //navigate('../pages/Login', { replace: true });
+
+  }
 
   
   
   return (
+
     <>
       <IconButton
         ref={anchorRef}
@@ -108,7 +115,7 @@ export default function AccountPopover({userData}) {
         ))}
 
         <Box sx={{ p: 2, pt: 1.5 }}>
-          <Button fullWidth color="inherit" variant="outlined" href="/">
+          <Button fullWidth color="inherit" variant="outlined" href="/" onClick={handleLogout}>
             Logout
           </Button>
         </Box>
