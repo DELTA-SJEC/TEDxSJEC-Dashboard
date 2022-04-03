@@ -1,9 +1,12 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
 import { Card, Stack, Container, Typography } from '@mui/material';
 // components
 import Page from '../components/Page';
 import { LoginForm } from '../sections/authentication/login';
+
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +38,17 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Login() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if(localStorage.getItem('token')){
+      navigate('/dashboard/app', { replace: true });
+    }
+  
+    
+  }, [])
+  
+
+  
   return (
     <RootStyle title="Login">
       <SectionStyle sx={{ display: { xs: 'none', md: 'flex' } }}>

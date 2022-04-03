@@ -36,7 +36,9 @@ export default function LoginForm() {
       const formData = new FormData();
       formData.append('email',values.email);
       formData.append('password',values.password);
-      
+      //localStorage.setItem("email",values.email);
+      //localStorage.setItem("password", values.password);
+
       axios.post('https://api.delta-sjec.tech/api/login',formData,{
         headers: {
          
