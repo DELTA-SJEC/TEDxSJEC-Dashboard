@@ -1,9 +1,17 @@
+ /* eslint-disable */ 
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import axios from 'axios';
+import More from './More'
+import * as React from 'react';
+
+
+
 // material
 import {
+  Box,Modal,
   Card,
   Table,
   Stack,
@@ -16,8 +24,11 @@ import {
   Container,
   Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  Backdrop,
+  CircularProgress,
 } from '@mui/material';
+
 // components
 import Page from '../components/Page';
 import Label from '../components/Label';
@@ -26,16 +37,16 @@ import Iconify from '../components/Iconify';
 import SearchNotFound from '../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
 //
-import USERLIST from '../_mocks_/user';
+
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
+  { id: 'phone', label: 'Phone', alignRight: false },
   { id: 'paymentId', label: 'Payment ID', alignRight: false },
-  { id: 'amount', label: 'Amount Paid', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'items',label:'Payment Details', alignRight:false},
   { id: '' }
 ];
 
@@ -77,6 +88,33 @@ export default function User() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [isLoading,setLoading]=useState(true);
+  const [users,setUser]=useState(null);
+
+  useEffect(() => {
+    axios.get('https://ted.vigneshcodes.in/api/payment/all',{ headers: { Authorization: localStorage.getItem('token') }})
+  .then(function (response) {
+    
+
+    const userss = [...Array(response.data.paymentData.length)].map((_, index) => ({
+      id: response.data.paymentData[index]._id,
+      name: response.data.paymentData[index].name,
+      email: response.data.paymentData[index].email,
+      phone:response.data.paymentData[index].phone,
+      paymentId: response.data.paymentData[index].razorpay_payment_id,
+      items:response.data.paymentData[index].response.items
+    }));
+    
+    setUser(userss)
+    setLoading(false)
+  })
+  .catch(function (error) {
+    
+    console.log(error);
+  })  
+  
+    
+  }, [])
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -86,7 +124,7 @@ export default function User() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = users.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -123,13 +161,24 @@ export default function User() {
   const handleFilterByName = (event) => {
     setFilterName(event.target.value);
   };
+  var filteredUsers=null;
+  var emptyRows=null;
+  var isUserNotFound=null;
+  if (isLoading) {
+    return (   
+    <div>
+      <Backdrop
+        sx={{ color: '#00A555', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true} >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>);
+  }else{
+     emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
-
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
-
-  const isUserNotFound = filteredUsers.length === 0;
-
+     filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
+  
+     isUserNotFound = filteredUsers.length === 0;
+  }
   return (
     <Page title="Attendee">
       <Container>
@@ -161,7 +210,7 @@ export default function User() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={users.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -170,7 +219,7 @@ export default function User() {
                   {filteredUsers
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, name, paymentId, status, email, amount, avatarUrl } = row;
+                      const { id, name,phone, paymentId, email,  avatarUrl,items } = row;
                       const isItemSelected = selected.indexOf(name) !== -1;
 
                       return (
@@ -197,20 +246,11 @@ export default function User() {
                             </Stack>
                           </TableCell>
                           <TableCell align="left">{email}</TableCell>
+                          <TableCell align="left">{phone}</TableCell>
                           <TableCell align="left">{paymentId}</TableCell>
-                          <TableCell align="left">₹{amount}</TableCell>
-                          <TableCell align="left">
-                            <Label
-                              variant="ghost"
-                              color={(status === 'banned' && 'error') || 'success'}
-                            >
-                              {sentenceCase(status)}
-                            </Label>
-                          </TableCell>
+                          <TableCell align="left"> <More payData={items}></More></TableCell>
 
-                          <TableCell align="right">
-                            <UserMoreMenu />
-                          </TableCell>
+                           
                         </TableRow>
                       );
                     })}
@@ -236,7 +276,7 @@ export default function User() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={users.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -247,3 +287,19 @@ export default function User() {
     </Page>
   );
 }
+
+
+//extraas dont delete
+/*
+<TableCell align="left">
+                            <Label
+                              variant="ghost"
+                              color={(status === 'banned' && 'error') || 'success'}
+                            >
+                              {sentenceCase(status)}
+                            </Label>
+                          </TableCell>
+
+                          <TableCell align="right">
+                            <UserMoreMenu />
+                          </TableCell> */

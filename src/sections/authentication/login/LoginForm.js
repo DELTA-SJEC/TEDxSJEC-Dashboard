@@ -39,7 +39,7 @@ export default function LoginForm() {
       //localStorage.setItem("email",values.email);
       //localStorage.setItem("password", values.password);
 
-      axios.post('https://api.delta-sjec.tech/api/login',formData,{
+      axios.post('https://ted.vigneshcodes.in/api/login',formData,{
         headers: {
          
           'Content-type': 'multipart/form-data'

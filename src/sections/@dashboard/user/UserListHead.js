@@ -38,7 +38,9 @@ export default function UserListHead({
             onChange={onSelectAllClick}
           />
         </TableCell>
-        {headLabel.map((headCell) => (
+       
+        {
+        headLabel.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.alignRight ? 'right' : 'left'}

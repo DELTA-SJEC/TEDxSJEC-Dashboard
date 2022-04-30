@@ -1,12 +1,15 @@
+ /* eslint-disable */ 
 import { useState,useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
+import { Backdrop,CircularProgress} from '@mui/material'
 //
+import axios from 'axios';
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
 
-import axios from 'axios';
+
 // ----------------------------------------------------------------------
 
 const APP_BAR_MOBILE = 64;
@@ -37,11 +40,12 @@ export default function DashboardLayout() {
   const [open, setOpen] = useState(false);
   const [userData,setUserData]=useState({})
   const [isLoading, setLoading] = useState(true);
+  
 useEffect(() => {
-    axios.get('https://api.delta-sjec.tech/api/current/user',{ headers: { Authorization: localStorage.getItem('token') }})
+    axios.get('https://ted.vigneshcodes.in/api/current/user',{ headers: { Authorization: localStorage.getItem('token') }})
   .then(function (response) {
     
-   // console.log(response.data.user);
+   
    
     setUserData(response.data.user)
     setLoading(false)
@@ -54,7 +58,12 @@ useEffect(() => {
     
   }, [])
   if (isLoading) {
-    return <div className="Loader-dash">Loading...</div>;
+    return ( <div>
+      <Backdrop
+        sx={{ color: '#00A555', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true} >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>);
   }
 
   return (
