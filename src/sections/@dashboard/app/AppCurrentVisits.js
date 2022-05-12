@@ -1,3 +1,5 @@
+/* eslint-disable */ 
+import { useState,useEffect } from 'react';
 import { merge } from 'lodash';
 import ReactApexChart from 'react-apexcharts';
 // material
@@ -31,9 +33,27 @@ const ChartWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const CHART_DATA = [4344, 5435, 1443];
 
-export default function AppCurrentVisits() {
+
+export default function AppCurrentVisits(users) {
+  var CHART_DATA = [0, 0];
+  const [chartData,setChart]=useState([])
+  
+  useEffect(() => {
+    
+    users.users.map((item)=>{
+     if (item.email.endsWith("sjec.ac.in"))
+     CHART_DATA[0]+=1
+     
+     else 
+     CHART_DATA[1]+=1
+     
+    }
+    )
+    setChart(CHART_DATA)
+   
+   
+  }, []) 
   const theme = useTheme();
 
   const chartOptions = merge(BaseOptionChart(), {
@@ -43,7 +63,7 @@ export default function AppCurrentVisits() {
       theme.palette.warning.main,
       theme.palette.error.main
     ],
-    labels: ['From College', 'Outside College', 'Volunteers'],
+    labels: ['From College', 'Outside College'],
     stroke: { colors: [theme.palette.background.paper] },
     legend: { floating: true, horizontalAlign: 'center' },
     dataLabels: { enabled: true, dropShadow: { enabled: false } },
@@ -65,7 +85,7 @@ export default function AppCurrentVisits() {
     <Card>
       <CardHeader title="Attendees" />
       <ChartWrapperStyle dir="ltr">
-        <ReactApexChart type="pie" series={CHART_DATA} options={chartOptions} height={280} />
+        <ReactApexChart type="pie" series={chartData } options={chartOptions} height={280} />
       </ChartWrapperStyle>
     </Card>
   );

@@ -42,7 +42,7 @@ export default function LoginForm() {
       //localStorage.setItem("password", values.password);
 
       axios
-        .post("https://ted.vigneshcodes.in/api/login", formData, {
+        .post("https://eurl.vigneshcodes.in/api/login", formData, {
           headers: {
             "Content-type": "multipart/form-data",
           },

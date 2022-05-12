@@ -92,7 +92,8 @@ export default function User() {
   const [users,setUser]=useState(null);
 
   useEffect(() => {
-    axios.get('https://ted.vigneshcodes.in/api/payment/all',{ headers: { Authorization: localStorage.getItem('token') }})
+    axios.get('https://eurl.vigneshcodes.in/api/payment/all',{ headers: { Authorization: localStorage.getItem('token') , 'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json',}})
   .then(function (response) {
     
 

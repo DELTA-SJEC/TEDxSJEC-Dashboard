@@ -1,3 +1,5 @@
+/* eslint-disable */ 
+import { useState,useEffect } from 'react';
 // material
 import { alpha, styled } from '@mui/material/styles';
 import { Card, Typography } from '@mui/material';
@@ -5,6 +7,7 @@ import { Card, Typography } from '@mui/material';
 import { fShortenNumber } from '../../../utils/formatNumber';
 // component
 import Iconify from '../../../components/Iconify';
+import { previousDay } from 'date-fns';
 
 // ----------------------------------------------------------------------
 
@@ -34,15 +37,32 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const TOTAL = 714000;
+var TOTAL = 0;
 
-export default function AppWeeklySales() {
+
+export default function AppWeeklySales(users) {
+ 
+  const [total,setTotal]=useState(0)
+
+  
+  useEffect(() => {
+    TOTAL=0;
+    users.users.map((item)=>{
+      if (typeof item.items!='undefined'){
+      var t=item.items.filter(y=>y.status=='captured').map(x=>x.amount).reduce((acc,bill)=>bill+acc);
+      TOTAL=TOTAL+t
+      setTotal(TOTAL);
+    }
+    })
+   
+   
+  }, []) 
   return (
     <RootStyle>
       <IconWrapperStyle>
         <Iconify icon="fa-solid:rupee-sign" width={24} height={24} />
       </IconWrapperStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
+      <Typography variant="h3">{fShortenNumber(total/100)}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         Total amount of cash
       </Typography>

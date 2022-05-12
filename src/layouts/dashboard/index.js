@@ -42,7 +42,7 @@ export default function DashboardLayout() {
   const [isLoading, setLoading] = useState(true);
   
 useEffect(() => {
-    axios.get('https://ted.vigneshcodes.in/api/current/user',{ headers: { Authorization: localStorage.getItem('token') }})
+    axios.get('https://eurl.vigneshcodes.in/api/current/user',{ headers: { Authorization: localStorage.getItem('token') }})
   .then(function (response) {
     
    
