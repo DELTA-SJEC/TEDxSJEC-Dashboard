@@ -42,7 +42,7 @@ export default function LoginForm() {
       //localStorage.setItem("password", values.password);
 
       axios
-        .post("https://eurl.vigneshcodes.in/api/login", formData, {
+        .post(`${process.env.REACT_APP_SERVER_URL}/api/login`, formData, {
           headers: {
             "Content-type": "multipart/form-data",
           },
