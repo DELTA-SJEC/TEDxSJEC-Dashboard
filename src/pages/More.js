@@ -47,6 +47,7 @@ const style = {
   const errors={}
   
 const More = (payData) => {
+  console.log(payData)
     const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

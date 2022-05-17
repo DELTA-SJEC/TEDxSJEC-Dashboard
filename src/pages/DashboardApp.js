@@ -41,10 +41,11 @@ export default function DashboardApp() {
             email: response.data.paymentData[index].email,
             phone: response.data.paymentData[index].phone,
             paymentId: response.data.paymentData[index].razorpay_payment_id,
+            imgAdd:response.data.paymentData[index].image,
             items: response.data.paymentData[index].response.items,
           })
         );
-
+       
         setUser(userss);
 
         setLoading(false);
@@ -63,6 +64,7 @@ export default function DashboardApp() {
   }
   return (
     <Page title="Dashboard">
+     
       <Container maxWidth="xl">
         <Box sx={{ pb: 5 }}>
           <Typography variant="h4">Hi, Welcome back</Typography>

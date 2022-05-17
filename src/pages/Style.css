@@ -8,3 +8,16 @@
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
   }
+#download_csv{
+  text-decoration: none;
+  color: white;
+  background-color: #009E4E;
+  padding: 7px 20px;
+  border-radius: 5px;
+  font-size: 12px;
+  box-shadow:0 5px 20px #009E4E;
+}
+#download_csv:hover{
+  box-shadow:none;
+  background-color: #00714E;
+}

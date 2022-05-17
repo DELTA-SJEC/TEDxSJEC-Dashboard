@@ -3,10 +3,12 @@ import * as Yup from "yup";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik, Form, FormikProvider } from "formik";
+import { ToastContainer, toast } from 'react-toastify';
 // material
 import { Stack, TextField, IconButton, InputAdornment } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 // component
+import 'react-toastify/dist/ReactToastify.css';
 import Iconify from "../../../components/Iconify";
 
 //axios
@@ -55,7 +57,7 @@ export default function LoginForm() {
           },
           (error) => {
             setSubmitting(false);
-            alert("Wrong Email or Password!");
+            toast.error("Wrong Email or Password!");
           }
         );
     },
@@ -69,6 +71,7 @@ export default function LoginForm() {
 
   return (
     <FormikProvider value={formik}>
+      <ToastContainer />
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Stack spacing={3}>
           <TextField
@@ -101,7 +104,7 @@ export default function LoginForm() {
             error={Boolean(touched.password && errors.password)}
             helperText={touched.password && errors.password}
           />
-
+          
           <LoadingButton
             fullWidth
             size="large"
