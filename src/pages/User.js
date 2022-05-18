@@ -87,7 +87,7 @@ function applySortFilter(array, comparator, query) {
   }
   return stabilizedThis.map((el) => el[0]);
 }
-var csvData=null;
+var csvData = null;
 export default function User() {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState("asc");
@@ -97,7 +97,7 @@ export default function User() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [isLoading, setLoading] = useState(true);
   const [users, setUser] = useState(null);
-  const [forcsvdata,setCSVData]=useState(null);
+  const [forcsvdata, setCSVData] = useState(null);
 
   useEffect(() => {
     axios
@@ -116,19 +116,22 @@ export default function User() {
             email: response.data.paymentData[index].email,
             phone: response.data.paymentData[index].phone,
             paymentId: response.data.paymentData[index].razorpay_payment_id,
-            orderId:response.data.paymentData[index].razorpay_order_id,
-            imgAdd:response.data.paymentData[index].image,
+            orderId: response.data.paymentData[index].razorpay_order_id,
+            imgAdd: response.data.paymentData[index].image,
             items: response.data.paymentData[index].response.items,
           })
         );
-        const forcsv=[...Array(response.data.paymentData.length)].map(
+        const forcsv = [...Array(response.data.paymentData.length)].map(
           (_, index) => ({
             id: response.data.paymentData[index]._id,
             name: response.data.paymentData[index].name,
             email: response.data.paymentData[index].email,
-            phone:response.data.paymentData[index].phone.slice(3,),
+            image:
+              `${process.env.REACT_APP_SERVER_URL}` +
+              response.data.paymentData[index].image,
+            phone: response.data.paymentData[index].phone.slice(3),
             paymentId: response.data.paymentData[index].razorpay_payment_id,
-            orderId:response.data.paymentData[index].razorpay_order_id,
+            orderId: response.data.paymentData[index].razorpay_order_id,
           })
         );
 
@@ -201,9 +204,6 @@ export default function User() {
       </div>
     );
   } else {
-    
-   
-
     emptyRows =
       page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
@@ -228,10 +228,13 @@ export default function User() {
             Attendee
           </Typography>
           {console.log(forcsvdata)}
-          <CSVLink id="download_csv" data={forcsvdata} filename={"TedX2022.csv"}>Download CSV</CSVLink>
-          
-
-         
+          <CSVLink
+            id="download_csv"
+            data={forcsvdata}
+            filename={`TEDxSJEC_Attendee_${new Date().toLocaleDateString()}.csv`}
+          >
+            Download CSV
+          </CSVLink>
         </Stack>
 
         <Card>
@@ -264,7 +267,7 @@ export default function User() {
                         paymentId,
                         orderId,
                         email,
-                        avatarUrl,
+                        imgAdd,
                         items,
                       } = row;
                       const isItemSelected = selected.indexOf(name) !== -1;
@@ -290,7 +293,10 @@ export default function User() {
                               alignItems="center"
                               spacing={2}
                             >
-                              <Avatar alt={name} src={"https://tedxsjec-2022.vigneshcodes.in/"+avatarUrl} />
+                              <Avatar
+                                alt={name}
+                                src={`${process.env.REACT_APP_SERVER_URL}${imgAdd}`}
+                              />
                               <Typography variant="subtitle2" noWrap>
                                 {name}
                               </Typography>
@@ -301,7 +307,6 @@ export default function User() {
                           <TableCell align="left">{paymentId}</TableCell>
                           <TableCell align="left">{orderId}</TableCell>
                           <TableCell align="left">
-                            {" "}
                             <More payData={items}></More>
                           </TableCell>
                         </TableRow>
