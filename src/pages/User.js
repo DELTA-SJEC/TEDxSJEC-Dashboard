@@ -50,7 +50,8 @@ const TABLE_HEAD = [
   { id: "phone", label: "Phone", alignRight: false },
   { id: "paymentId", label: "Payment ID", alignRight: false },
   { id: "orderId", label: "Order ID", alignRight: false },
-  { id: "items", label: "Payment Details", alignRight: false },
+  { id: "status", label: "Status", alignRight: false },
+  { id: "items", label: "Payment", alignRight: false },
   { id: "" },
 ];
 
@@ -118,9 +119,11 @@ export default function User() {
             paymentId: response.data.paymentData[index].razorpay_payment_id,
             orderId: response.data.paymentData[index].razorpay_order_id,
             imgAdd: response.data.paymentData[index].image,
+            attendee_flag: response.data.paymentData[index].attendee_flag,
             items: response.data.paymentData[index].response.items,
           })
         );
+
         const forcsv = [...Array(response.data.paymentData.length)].map(
           (_, index) => ({
             id: response.data.paymentData[index]._id,
@@ -227,7 +230,6 @@ export default function User() {
           <Typography variant="h4" gutterBottom>
             Attendee
           </Typography>
-          {console.log(forcsvdata)}
           <CSVLink
             id="download_csv"
             data={forcsvdata}
@@ -268,6 +270,7 @@ export default function User() {
                         orderId,
                         email,
                         imgAdd,
+                        attendee_flag,
                         items,
                       } = row;
                       const isItemSelected = selected.indexOf(name) !== -1;
@@ -294,6 +297,15 @@ export default function User() {
                               spacing={2}
                             >
                               <Avatar
+                                style={{
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => {
+                                  window.open(
+                                    `${process.env.REACT_APP_SERVER_URL}${imgAdd}`,
+                                    "_blank"
+                                  );
+                                }}
                                 alt={name}
                                 src={`${process.env.REACT_APP_SERVER_URL}${imgAdd}`}
                               />
@@ -305,7 +317,24 @@ export default function User() {
                           <TableCell align="left">{email}</TableCell>
                           <TableCell align="left">{phone}</TableCell>
                           <TableCell align="left">{paymentId}</TableCell>
-                          <TableCell align="left">{orderId}</TableCell>
+                          <TableCell
+                            style={{
+                              cursor: "pointer",
+                              textDecoration: "underline",
+                              color: "#00A555",
+                            }}
+                            onClick={() => {
+                              window.open(
+                                `${process.env.REACT_APP_CLIENT_URL}/ticket/${orderId}`
+                              );
+                            }}
+                            align="left"
+                          >
+                            {orderId}
+                          </TableCell>
+                          <TableCell align="left">
+                            <center>{attendee_flag === 1 ? "✅" : "❌"}</center>
+                          </TableCell>
                           <TableCell align="left">
                             <More payData={items}></More>
                           </TableCell>
