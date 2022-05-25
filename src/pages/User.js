@@ -297,9 +297,6 @@ export default function User() {
                               spacing={2}
                             >
                               <Avatar
-                                style={{
-                                  cursor: "pointer",
-                                }}
                                 onClick={() => {
                                   window.open(
                                     `${process.env.REACT_APP_SERVER_URL}${imgAdd}`,
@@ -307,7 +304,6 @@ export default function User() {
                                   );
                                 }}
                                 alt={name}
-                                src={`${process.env.REACT_APP_SERVER_URL}${imgAdd}`}
                               />
                               <Typography variant="subtitle2" noWrap>
                                 {name}
@@ -333,7 +329,9 @@ export default function User() {
                             {orderId}
                           </TableCell>
                           <TableCell align="left">
-                            <center>{attendee_flag === 1 ? "✅" : "❌"}</center>
+                            <center>
+                              {attendee_flag === true ? "✅" : "❌"}
+                            </center>
                           </TableCell>
                           <TableCell align="left">
                             <More payData={items}></More>
